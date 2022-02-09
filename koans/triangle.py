@@ -27,6 +27,10 @@
 #         return 'scalene'
 
 def triangle(a, b, c):
+    if a <= 0 or b <= 0 or c <= 0:
+        raise TriangleError(Exception)
+    if a+b < c or b+c < a or a+c < b:
+        raise TriangleError(Exception)
     if len(set({a,b,c})) == 1:
         return 'equilateral'
     elif len(set({a,b,c})) == 2:
@@ -34,6 +38,13 @@ def triangle(a, b, c):
     else: 
         return 'scalene'
 
+
+# def triangle(a,b,c):
+#     if a <= 0 or b <= 0 or c <= 0:
+#         raise TriangleError(Exception)
+
 # Error class used in part 2.  No need to change this code.
 class TriangleError(Exception):
     pass
+        
+
