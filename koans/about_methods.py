@@ -86,7 +86,7 @@ class AboutMethods(Koan):
 
         self.assertEqual(12, function_with_the_same_name(3, 4))
    
-    #I thought initially this would be 7, but I guess because we don't use "self" when we call the function 
+    #I thought initially this would be 7, but I guess because we don't use "self" when we call the function. Yes, reading this again... that is exactly what is says when it says "functions without self arguement". 
 
 
     def test_calling_methods_in_same_class_with_explicit_receiver(self):
@@ -95,7 +95,11 @@ class AboutMethods(Koan):
 
         self.assertEqual(7, self.function_with_the_same_name(3, 4))
 
-        # this one uses self, so I guess it is therefore linked to the first one where we also put "self" as one of the parameters.
+        # this one uses self, so I guess it is therefore linked to the first one where we also put "self" as one of the parameters. I think "self" is just the name we gave the original function when we said (self, a, b)? 
+
+        #forgot for a moment this whole page is a class of "About Methods", which probably why I kept getting "self is not defined errors" earlier. This makes way more sense now! since self would be the class "About Methods"
+
+
 
     # ------------------------------------------------------------------
 
