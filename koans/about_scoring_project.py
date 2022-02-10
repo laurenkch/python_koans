@@ -33,7 +33,7 @@ from runner.koan import *
 # Your goal is to write the score method.
 
 
-#considered using the following to make a letter, count pairing, but I ended up not using it for now. May come back to this later to try again with the map. 
+#considered using the following code to make a letter, count pairing in a map, but I ended up not using it for now. May come back to this later to try again with the map. 
 # value_and_count = {x: dice.count(x) for x in unique_values}
 
 
