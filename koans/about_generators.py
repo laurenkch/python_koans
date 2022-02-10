@@ -14,12 +14,14 @@ class AboutGenerators(Koan):
 
     def test_generating_values_on_the_fly(self):
         result = list()
-        bacon_generator = (n + ' bacon' for n in ['crunchy','veggie','danish'])
+        bacon_generator = (n + ' bacon' for n in ['crunchy','veggie','danish']) #adds the word bacon to the end of each item in the list
 
         for bacon in bacon_generator:
-            result.append(bacon)
+            result.append(bacon) #adds the new word to the result list
 
-        self.assertEqual(__, result)
+        self.assertEqual(['crunchy bacon', 'veggie bacon', 'danish bacon'], result)
+
+
 
     def test_generators_are_different_to_list_comprehensions(self):
         num_list = [x*2 for x in range(1,3)]
@@ -28,9 +30,11 @@ class AboutGenerators(Koan):
         self.assertEqual(2, num_list[0])
 
         # A generator has to be iterated through.
-        with self.assertRaises(___): num = num_generator[0]
+        with self.assertRaises(TypeError): num = num_generator[0]
 
-        self.assertEqual(__, list(num_generator)[0])
+        #generator is not scriptable
+
+        self.assertEqual(2, list(num_generator)[0])
 
         # Both list comprehensions and generators can be iterated though. However, a generator
         # function is only called on the first iteration. The values are generated on the fly
@@ -44,9 +48,10 @@ class AboutGenerators(Koan):
         attempt1 = list(dynamite)
         attempt2 = list(dynamite)
 
-        self.assertEqual(__, attempt1)
-        self.assertEqual(__, attempt2)
+        self.assertEqual(['Boom!','Boom!','Boom!'], attempt1)
+        self.assertEqual([], attempt2)
 
+        #not entirely sure how it knows it's already performed the action/why it's like this. seems like you'd just be able to call it again? I guess maybe if you re-wrote the function over, in which case you wouldn't use a generator. 
     # ------------------------------------------------------------------
 
     def simple_generator_method(self):
@@ -59,13 +64,17 @@ class AboutGenerators(Koan):
         result = list()
         for item in self.simple_generator_method():
             result.append(item)
-        self.assertEqual(__, result)
+        self.assertEqual(['peanut','butter','and','jelly'], result)
 
     def test_generators_can_be_manually_iterated_and_closed(self):
         result = self.simple_generator_method()
-        self.assertEqual(__, next(result))
-        self.assertEqual(__, next(result))
+        self.assertEqual('peanut', next(result))
+        self.assertEqual('butter', next(result))
         result.close()
+
+        #not sure how this is different from calling the same generator function twice. I guess because we 'open' it with the variable result and close it at the end. 
+
+        #just looked up yield, which says it suspends the function's state so that you return to it right where you left off. Which I guess is the point of this particular test section. Sort of like a pause. 
 
     # ------------------------------------------------------------------
 
@@ -75,21 +84,21 @@ class AboutGenerators(Koan):
 
     def test_generator_method_with_parameter(self):
         result = self.square_me(range(2,5))
-        self.assertEqual(__, list(result))
-
+        self.assertEqual([4,9,16], list(result))
+        #goes from 2 - 4. 
     # ------------------------------------------------------------------
 
     def sum_it(self, seq):
         value = 0
         for num in seq:
-            # The local state of 'value' will be retained between iterations
+            # The local state of 'value' will be retained between iterations (like with a state variable in react). 
             value += num
             yield value
 
     def test_generator_keeps_track_of_local_variables(self):
         result = self.sum_it(range(2,5))
-        self.assertEqual(__, list(result))
-
+        self.assertEqual([2, 5, 9], list(result))
+    #stays the same, even though we call it later. But still returns the value to us each times to add to the ongoing list. 
     # ------------------------------------------------------------------
 
     def coroutine(self):
@@ -101,12 +110,15 @@ class AboutGenerators(Koan):
 
         # THINK ABOUT IT:
         # Why is this line necessary?
+
+        # Before you can communicate with a coroutine you must first call next() or send(None) to advance its execution to the first yield expression. 
+        #otherwise, there is no result or yield to refer back to. 
         #
         # Hint: Read the "Specification: Sending Values into Generators"
         #       section of http://www.python.org/dev/peps/pep-0342/
         next(generator)
 
-        self.assertEqual(__, generator.send(1 + 2))
+        self.assertEqual(3, generator.send(1 + 2))
 
     def test_before_sending_a_value_to_a_generator_next_must_be_called(self):
         generator = self.coroutine()
@@ -114,7 +126,7 @@ class AboutGenerators(Koan):
         try:
             generator.send(1 + 2)
         except TypeError as ex:
-            self.assertRegex(ex.args[0], __)
+            self.assertRegex(ex.args[0], "can't send non-None value to a just-started generator")
 
     # ------------------------------------------------------------------
 
@@ -132,11 +144,13 @@ class AboutGenerators(Koan):
 
         generator2 = self.yield_tester()
         next(generator2)
-        self.assertEqual(__, next(generator2))
+        self.assertEqual('no value', next(generator2))
 
     def test_send_none_is_equivalent_to_next(self):
         generator = self.yield_tester()
 
         next(generator)
         # 'next(generator)' is exactly equivalent to 'generator.send(None)'
-        self.assertEqual(__, generator.send(None))
+        self.assertEqual('no value', generator.send(None))
+
+        #no value because the first time you run the yield_tester generator, 'no value' is the return. 

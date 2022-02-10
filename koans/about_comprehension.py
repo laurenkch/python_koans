@@ -13,8 +13,10 @@ class AboutComprehension(Koan):
 
         comprehension = [delicacy.capitalize() for delicacy in feast]
 
-        self.assertEqual(__, comprehension[0])
-        self.assertEqual(__, comprehension[2])
+        self.assertEqual("Lambs", comprehension[0])
+        self.assertEqual('Orangutans', comprehension[2])
+
+#says for each item in the list feaat, go in and capitalize it. 
 
     def test_filtering_lists_with_list_comprehensions(self):
         feast = ['spam', 'sloths', 'orangutans', 'breakfast cereals',
@@ -22,15 +24,19 @@ class AboutComprehension(Koan):
 
         comprehension = [delicacy for delicacy in feast if len(delicacy) > 6]
 
-        self.assertEqual(__, len(feast))
-        self.assertEqual(__, len(comprehension))
+        self.assertEqual(5, len(feast))
+        self.assertEqual(3, len(comprehension))
+
+        #spam and sloths are 6 or less so they don't get added to comprehension
 
     def test_unpacking_tuples_in_list_comprehensions(self):
         list_of_tuples = [(1, 'lumberjack'), (2, 'inquisition'), (4, 'spam')]
         comprehension = [ skit * number for number, skit in list_of_tuples ]
 
-        self.assertEqual(__, comprehension[0])
-        self.assertEqual(__, comprehension[2])
+        self.assertEqual('lumberjack', comprehension[0])
+        self.assertEqual('spamspamspamspam', comprehension[2])
+
+        #4 times the string, so spam repeated four times. 
 
     def test_double_list_comprehension(self):
         list_of_eggs = ['poached egg', 'fried egg']
@@ -40,13 +46,20 @@ class AboutComprehension(Koan):
         comprehension = [ '{0} and {1}'.format(egg, meat) for egg in list_of_eggs for meat in list_of_meats]
 
 
-        self.assertEqual(__, comprehension[0])
-        self.assertEqual(__, len(comprehension))
+        self.assertEqual('poached egg and lite spam', comprehension[0])
+        self.assertEqual(6, len(comprehension))
+
+    # I think this would start with the meat and combine it with both egg items, them move down the meat list and repeat. 
+
+    #I got it backwards, it starts with the eggs and then pairs it with each meat. 
 
     def test_creating_a_set_with_set_comprehension(self):
         comprehension = { x for x in 'aabbbcccc'}
 
-        self.assertEqual(__, comprehension)  # remember that set members are unique
+        self.assertEqual({'a','b','c'}, comprehension)  # remember that set members are unique
+
+        #adds each letter from the list to comprehension but since it's a list only abc are left. 
+
 
     def test_creating_a_dictionary_with_dictionary_comprehension(self):
         dict_of_weapons = {'first': 'fear', 'second': 'surprise',
@@ -55,7 +68,9 @@ class AboutComprehension(Koan):
 
         dict_comprehension = { k.upper(): weapon for k, weapon in dict_of_weapons.items() if weapon}
 
-        self.assertEqual(__, 'first' in dict_comprehension)
-        self.assertEqual(__, 'FIRST' in dict_comprehension)
-        self.assertEqual(__, len(dict_of_weapons))
-        self.assertEqual(__, len(dict_comprehension))
+        self.assertEqual(False, 'first' in dict_comprehension) #k(the key or 'first' is converted to upper when added to dict_comprehension)
+        self.assertEqual(True, 'FIRST' in dict_comprehension)
+        self.assertEqual(5, len(dict_of_weapons))
+        self.assertEqual(4, len(dict_comprehension))
+
+# the last one doesn't get added since it doesn't have a weapon value.
