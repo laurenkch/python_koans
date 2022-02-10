@@ -32,9 +32,31 @@ from runner.koan import *
 #
 # Your goal is to write the score method.
 
+
+#considered using the following to make a letter, count pairing, but I ended up not using it for now. May come back to this later to try again with the map. 
+# value_and_count = {x: dice.count(x) for x in unique_values}
+
+
 def score(dice):
-    # You need to write this method
-    pass
+    unique_values = set(dice)
+    total_score = 0
+
+    for value in dice:
+        if value == 1:
+            total_score += 100
+        elif value == 5:
+            total_score += 50
+
+    for value in unique_values:
+        if value == 1 and dice.count(value) >= 3:
+            total_score += 700
+        elif value == 5 and dice.count(value) >= 3:
+            total_score+= 350
+        elif dice.count(value) >= 3:
+            total_score+= value * 100
+    
+    return total_score
+
 
 class AboutScoringProject(Koan):
     def test_score_of_an_empty_list_is_zero(self):
