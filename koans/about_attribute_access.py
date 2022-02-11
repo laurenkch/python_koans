@@ -71,7 +71,7 @@ class AboutAttributeAccess(Koan):
 
     class WellBehavedFooCatcher:
         def __getattribute__(self, attr_name):
-            if attr_name[:3] == "foo":
+            if attr_name[:3] == "foo": #slices name from 0 to 3 returns 'foo'
                 return "Foo to you too"
             else:
                 return super().__getattribute__(attr_name)
@@ -79,13 +79,13 @@ class AboutAttributeAccess(Koan):
     def test_foo_attributes_are_caught(self):
         catcher = self.WellBehavedFooCatcher()
 
-        self.assertEqual(__, catcher.foo_bar)
-        self.assertEqual(__, catcher.foo_baz)
+        self.assertEqual("Foo to you too", catcher.foo_bar) #returns foo to you too because both attributes start with 'foo'
+        self.assertEqual("Foo to you too", catcher.foo_baz)
 
     def test_non_foo_messages_are_treated_normally(self):
         catcher = self.WellBehavedFooCatcher()
 
-        with self.assertRaises(___): catcher.normal_undefined_attribute
+        with self.assertRaises(AttributeError): catcher.normal_undefined_attribute
 
     # ------------------------------------------------------------------
 
@@ -120,7 +120,9 @@ class AboutAttributeAccess(Koan):
         catcher = self.RecursiveCatcher()
         catcher.my_method()
         global stack_depth
-        self.assertEqual(__, stack_depth)
+        self.assertEqual(11, stack_depth)
+
+
 
     # ------------------------------------------------------------------
 
@@ -141,17 +143,22 @@ class AboutAttributeAccess(Koan):
         catcher = self.MinimalCatcher()
         catcher.my_method()
 
-        self.assertEqual(__, catcher.no_of_getattr_calls)
+        self.assertEqual(0, catcher.no_of_getattr_calls)
+
+        #get attribute ignores known attributes so it doesn't add 1, just returns 0
 
     def test_getattr_only_catches_unknown_attributes(self):
         catcher = self.MinimalCatcher()
-        catcher.purple_flamingos()
-        catcher.free_pie()
+        catcher.purple_flamingos() #must add 1 here
+        catcher.free_pie() #and here. 
 
-        self.assertEqual(__,
+        self.assertEqual('DuffObject',
             type(catcher.give_me_duff_or_give_me_death()).__name__)
 
-        self.assertEqual(__, catcher.no_of_getattr_calls)
+        #'DuffObject' object has no attribute '__name__'
+        #must add one each time we make a new attribute, including give me duff or give me death?
+
+        self.assertEqual(3, catcher.no_of_getattr_calls) 
 
     # ------------------------------------------------------------------
 
@@ -159,10 +166,10 @@ class AboutAttributeAccess(Koan):
         def __setattr__(self, attr_name, value):
             new_attr_name =  attr_name
 
-            if attr_name[-5:] == 'comic':
+            if attr_name[-5:] == 'comic': #ends in comic
                 new_attr_name = "my_" + new_attr_name
-            elif attr_name[-3:] == 'pie':
-                new_attr_name = "a_" + new_attr_name
+            elif attr_name[-3:] == 'pie': #ends in pie
+                new_attr_name = "a_" + new_attr_name 
 
             object.__setattr__(self, new_attr_name, value)
 
@@ -172,14 +179,14 @@ class AboutAttributeAccess(Koan):
         fanboy.comic = 'The Laminator, issue #1'
         fanboy.pie = 'blueberry'
 
-        self.assertEqual(__, fanboy.a_pie)
+        self.assertEqual('blueberry', fanboy.a_pie)
 
         #
         # NOTE: Change the prefix to make this next assert pass
         #
 
-        prefix = '__'
-        self.assertEqual("The Laminator, issue #1", getattr(fanboy, prefix + '_comic'))
+        prefix = 'my_'
+        self.assertEqual("The Laminator, issue #1", getattr(fanboy, prefix + 'comic'))
 
     # ------------------------------------------------------------------
 
@@ -200,7 +207,7 @@ class AboutAttributeAccess(Koan):
         setter = self.ScarySetter()
         setter.e = "mc hammer"
 
-        self.assertEqual(__, setter.altered_e)
+        self.assertEqual('mc hammer', setter.altered_e)
 
     def test_it_mangles_some_internal_attributes(self):
         setter = self.ScarySetter()
@@ -208,9 +215,9 @@ class AboutAttributeAccess(Koan):
         try:
             coconuts = setter.num_of_coconuts
         except AttributeError:
-            self.assertEqual(__, setter.altered_num_of_coconuts)
+            self.assertEqual(9, setter.altered_num_of_coconuts) #9 because it adds "altered" to the front after it assigns the variable 9. 
 
     def test_in_this_case_private_attributes_remain_unmangled(self):
         setter = self.ScarySetter()
 
-        self.assertEqual(__, setter._num_of_private_coconuts)
+        self.assertEqual(2, setter._num_of_private_coconuts) #still 2. 
