@@ -15,12 +15,15 @@ class AboutAttributeAccess(Koan):
     def test_calling_undefined_functions_normally_results_in_errors(self):
         typical = self.TypicalObject()
 
-        with self.assertRaises(___): typical.foobar()
+        with self.assertRaises(AttributeError): typical.foobar()
+
+        #says 'TypicalObject' object has no attribute 'foobar'
 
     def test_calling_getattribute_causes_an_attribute_error(self):
         typical = self.TypicalObject()
 
-        with self.assertRaises(___): typical.__getattribute__('foobar')
+        with self.assertRaises(AttributeError): typical.__getattribute__('foobar')
+        #says 'TypicalObject' object has no attribute 'foobar'
 
         # THINK ABOUT IT:
         #
@@ -36,30 +39,33 @@ class AboutAttributeAccess(Koan):
     def test_all_attribute_reads_are_caught(self):
         catcher = self.CatchAllAttributeReads()
 
-        self.assertRegex(catcher.foobar, __)
+        self.assertRegex(
+            catcher.foobar, "Someone called 'foobar' and it could not be found")
 
     def test_intercepting_return_values_can_disrupt_the_call_chain(self):
         catcher = self.CatchAllAttributeReads()
 
-        self.assertRegex(catcher.foobaz, __) # This is fine
+        self.assertRegex(
+            catcher.foobaz, "Someone called 'foobaz' and it could not be found")  # This is fine
 
         try:
             catcher.foobaz(1)
         except TypeError as ex:
             err_msg = ex.args[0]
 
-        self.assertRegex(err_msg, __)
+        self.assertRegex(err_msg, "'str' object is not callable")
 
         # foobaz returns a string. What happens to the '(1)' part?
         # Try entering this into a python console to reproduce the issue:
         #
         #     "foobaz"(1)
-        #
+        #TypeError: 'str' object is not callable
 
     def test_changes_to_the_getattribute_implementation_affects_getattr_function(self):
         catcher = self.CatchAllAttributeReads()
 
-        self.assertRegex(getattr(catcher, 'any_attribute'), __)
+        self.assertRegex(getattr(catcher, 'any_attribute'), "Someone called 'any_attribute' and it could not be found"
+                         )
 
     # ------------------------------------------------------------------
 
