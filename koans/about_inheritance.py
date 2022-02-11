@@ -23,31 +23,32 @@ class AboutInheritance(Koan):
             return "yip"
 
     def test_subclasses_have_the_parent_as_an_ancestor(self):
-        self.assertEqual(__, issubclass(self.Chihuahua, self.Dog))
+        self.assertEqual(True, issubclass(self.Chihuahua, self.Dog))
 
     def test_all_classes_in_python_3_ultimately_inherit_from_object_class(self):
-        self.assertEqual(__, issubclass(self.Chihuahua, object))
+        self.assertEqual(True, issubclass(self.Chihuahua, object))
 
         # Note: This isn't the case in Python 2. In that version you have
         # to inherit from a built in class or object explicitly
 
     def test_instances_inherit_behavior_from_parent_class(self):
         chico = self.Chihuahua("Chico")
-        self.assertEqual(__, chico.name)
+        self.assertEqual("Chico", chico.name)
 
     def test_subclasses_add_new_behavior(self):
         chico = self.Chihuahua("Chico")
-        self.assertEqual(__, chico.wag())
+        self.assertEqual("happy", chico.wag())
 
         fido = self.Dog("Fido")
-        with self.assertRaises(___): fido.wag()
+        with self.assertRaises(AttributeError):
+            fido.wag() #because we added wag to chihuahua not the parent dog. 
 
     def test_subclasses_can_modify_existing_behavior(self):
         chico = self.Chihuahua("Chico")
-        self.assertEqual(__, chico.bark())
+        self.assertEqual('yip', chico.bark()) #changed to yip on chihuahuas 
 
-        fido = self.Dog("Fido")
-        self.assertEqual(__, fido.bark())
+        fido = self.Dog("Fido") 
+        self.assertEqual("WOOF", fido.bark())
 
     # ------------------------------------------------------------------
 
@@ -58,8 +59,8 @@ class AboutInheritance(Koan):
 
     def test_subclasses_can_invoke_parent_behavior_via_super(self):
         ralph = self.BullDog("Ralph")
-        self.assertEqual(__, ralph.bark())
-
+        self.assertEqual("WOOF, GRR", ralph.bark())
+        #adds to the behavior already specified in stead of entirely replacing it. 
     # ------------------------------------------------------------------
 
     class GreatDane(Dog):
@@ -68,7 +69,7 @@ class AboutInheritance(Koan):
 
     def test_super_works_across_methods(self):
         george = self.GreatDane("George")
-        self.assertEqual(__, george.growl())
+        self.assertEqual("WOOF, GROWL", george.growl())
 
     # ---------------------------------------------------------
 
@@ -82,8 +83,13 @@ class AboutInheritance(Koan):
 
     def test_base_init_does_not_get_called_automatically(self):
         snoopy = self.Pug("Snoopy")
-        with self.assertRaises(___): name = snoopy.name
+        with self.assertRaises(AttributeError):
+            name = snoopy.name
+
+            #says snoopy has no attribute 'name'
 
     def test_base_init_has_to_be_called_explicitly(self):
         boxer = self.Greyhound("Boxer")
-        self.assertEqual(__, boxer.name)
+        self.assertEqual("Boxer", boxer.name)
+
+        #in this case it is called and does not use pass. 
