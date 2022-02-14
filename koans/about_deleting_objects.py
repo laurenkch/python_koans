@@ -50,9 +50,9 @@ class AboutDeletingObjects(Koan):
         except AttributeError as e:
             err_msg2 = e.args[0]
 
-        self.assertRegex(err_msg1, __)
-        self.assertRegex(err_msg2, __)
-
+        self.assertRegex(err_msg1, "'ClosingSale' object has no attribute 'toilet_brushes'")
+        self.assertRegex(err_msg2, "'ClosingSale' object has no attribute 'hamsters'")
+            #both were deleted
     # ====================================================================
 
     class ClintEastwood:
@@ -80,7 +80,7 @@ class AboutDeletingObjects(Koan):
         self.assertEqual('Senor Ninguno', cowboy.name)
 
         del cowboy.name
-        self.assertEqual(__, cowboy.name)
+        self.assertEqual("The man with no name", cowboy.name)
 
 
     # ====================================================================
@@ -107,11 +107,11 @@ class AboutDeletingObjects(Koan):
         self.assertEqual('Patrick', citizen.name)
 
         del citizen.name
-        self.assertEqual(__, citizen.name)
+        self.assertEqual("Number Six", citizen.name)
 
     # ====================================================================
 
-    class MoreOrganisedClosingSale(ClosingSale):
+    class MoreOrganisedClosingSale(ClosingSale): #what does passing in the name do here? make more organisedclosingsale an instance of closingsale?
         def __init__(self):
             self.last_deletion = None
             super().__init__()
@@ -121,6 +121,6 @@ class AboutDeletingObjects(Koan):
 
     def tests_del_can_be_overriden(self):
         sale = self.MoreOrganisedClosingSale()
-        self.assertEqual(__, sale.jellies())
+        self.assertEqual(5, sale.jellies())
         del sale.jellies
-        self.assertEqual(__, sale.last_deletion)
+        self.assertEqual('jellies', sale.last_deletion) 
